@@ -51,6 +51,7 @@ function App() {
     setLoadingProductId(id);
     getProduct(id);
     setLoadingProductId(null);
+    setCartQuantity(1);
   };
 
   const validateForm = (data) => {
@@ -112,15 +113,15 @@ function App() {
     productModalRef.current.hide();
   };
 
-  const updateCart = async (id, qty = 1) => {
+  const updateCart = async (cart_id, product_id, qty = 1) => {
     const product = {
       data: {
-        product_id: id,
+        product_id,
         qty,
       },
     };
 
-    const url = `${VITE_URL}/api/${VITE_PATH}/cart/${id}`;
+    const url = `${VITE_URL}/api/${VITE_PATH}/cart/${cart_id}`;
     const res = await apiFetch(url, 'PUT', false, product);
 
     Toast.fire({
@@ -368,7 +369,11 @@ function App() {
                         defaultValue={item.qty}
                         key={item.qty}
                         onBlur={(e) =>
-                          updateCart(item.id, Number(e.target.value))
+                          updateCart(
+                            item.id,
+                            item.product_id,
+                            Number(e.target.value)
+                          )
                         }
                       />
                     </div>
